@@ -150,6 +150,7 @@ public class SerialPortManager : MonoBehaviour
     {
         //상속하고 받은데이터로 프로젝트에 맞는 기능 구현
         //Debug.Log($"{data} 신호보내기");
+        
 
     }
 
