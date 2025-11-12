@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 public enum State
 {
     Play,
@@ -8,8 +9,8 @@ public enum State
 }
 public class CustomSPManager : SerialPortManager
 {
-    public State state;
-
+    [SerializeField] private VideoController videoController;
+    public State state = State.Stop;
     protected override void Awake()
     {
         base.Awake();
@@ -17,17 +18,43 @@ public class CustomSPManager : SerialPortManager
     protected override void Start()
     {
         base.Start();
+       
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            ReceivedData("S1");
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            ReceivedData("E1");
+        }
     }
     protected override void ReceivedData(string data)
     {
+        switch (data)
+        {
+            case "S1":
+                state = State.Play;
+                break;
+            case "E1":
+                state = State.Stop;
+                break;
+        }
+
+
         switch (state)
         {
             case State.Play:
                 //홍보영상끄고 카메라보여주기
+                videoController.OnSketchStart();
                 break;
             case State.Stop:
                 //홍보영상키기  : 루프
+                videoController.OnSketchEnd();
                 break;
         }
     }
+  
 }
