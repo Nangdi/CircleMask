@@ -29,9 +29,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AspectX: 1.3333
-    - _AspectY: 1
-    - _Feather: 0.05
+    - _AspectX: 2.2034166
+    - _AspectY: 1.2577639
+    - _Feather: 0.09192554
+    - _OffsetX: -0.07577789
+    - _OffsetY: 0
     m_Colors:
     - _MaskColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

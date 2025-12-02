@@ -20,6 +20,11 @@ public class SettingCamera : MonoBehaviour
     private string _Feather;
 
     public GameObject SettingPanel;
+    public float moveSpeed = 0.2f;   // 이동 속도 (UV값)
+
+    Material mat;
+    float offsetX = 0f;
+    float offsetY = 0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,12 +32,14 @@ public class SettingCamera : MonoBehaviour
 
 
         optionList[0].slider.value = material.GetFloat(optionList[0].propertyName);
-        optionList[1].slider.value = material.GetFloat(optionList[1].propertyName)/2;
+        optionList[1].slider.value = material.GetFloat(optionList[1].propertyName)/3;
         foreach (var item in optionList)
         {
             UpdateText(item);
 
         }
+        offsetX = JsonManager.instance.gameSettingData.offSetX;
+        offsetY = JsonManager.instance.gameSettingData.offSetY;
         //optionList[1].inputField.text = optionList[1].slider.value.ToString();
     }
 
@@ -44,6 +51,15 @@ public class SettingCamera : MonoBehaviour
             SettingPanel.SetActive(!SettingPanel.activeSelf);
             Cursor.visible = SettingPanel.activeSelf;
         }
+        float horizontal = Input.GetAxis("Horizontal");   // ← →
+        float vertical = Input.GetAxis("Vertical");       // ↑ ↓
+
+        offsetX -= horizontal * moveSpeed * Time.deltaTime;
+        offsetY -= vertical * moveSpeed * Time.deltaTime;
+
+        // 셰이더에 값 전달
+        material.SetFloat("_OffsetX", offsetX);
+        material.SetFloat("_OffsetY", offsetY);
     }
     public void SetFeather(float value)
     {
@@ -51,26 +67,26 @@ public class SettingCamera : MonoBehaviour
     }
     public void SetRatioX(float value)
     {
-        float fix = 2 * value;
+        float fix = 3 * value;
         material.SetFloat(optionList[1].propertyName, fix);
         UpdateText(optionList[1]);
     }
     public void SetRatioY(float value)
     {
-        float fix = 2 * value;
+        float fix = 3 * value;
         material.SetFloat(optionList[2].propertyName, fix);
         UpdateText(optionList[2]);
     }
     public void SetRatioX_Input(string value_string)
     {
         float temp = float.Parse(value_string);
-        float value = Mathf.Clamp(temp, 0, 2);
+        float value = Mathf.Clamp(temp, 0, 3);
         SetUIValue(optionList[1], value);
     }
     public void SetRatioY_Input(string value_string)
     {
         float temp = float.Parse(value_string);
-        float value = Mathf.Clamp(temp, 0, 2);
+        float value = Mathf.Clamp(temp, 0, 3);
         SetUIValue(optionList[2], value);
     }
 
@@ -95,6 +111,8 @@ public class SettingCamera : MonoBehaviour
         JsonManager.instance.gameSettingData.feather = material.GetFloat(optionList[0].propertyName);
         JsonManager.instance.gameSettingData.aspectX = material.GetFloat(optionList[1].propertyName);
         JsonManager.instance.gameSettingData.aspectY = material.GetFloat(optionList[2].propertyName);
+        JsonManager.instance.gameSettingData.offSetX = offsetX;
+        JsonManager.instance.gameSettingData.offSetY = offsetY;
 
         JsonManager.SaveData(JsonManager.instance.gameSettingData, JsonManager.instance.gameDataPath);
     }

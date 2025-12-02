@@ -9,6 +9,8 @@ public class GameSettingData
     public float feather = 0.05f;
     public float aspectX = 1.333f;
     public float aspectY = 1f;
+    public float offSetX = 0f;
+    public float offSetY = 0f;
 }
 public class PortJson
 {
