@@ -11,6 +11,9 @@ public class GameSettingData
     public float aspectY = 1f;
     public float offSetX = 0f;
     public float offSetY = 0f;
+    public int FPS =30;
+    public float cam1horizontlal = 0;
+    public float cam2horizontlal = 0;
 }
 public class PortJson
 {
@@ -46,7 +49,7 @@ public class JsonManager : MonoBehaviour
     }
 
     //저장할 json 객체 , 경로설정
-    public static void SaveData<T>(T jsonObject, string path) where T : new()
+    public static void SaveData<T>(T jsonObject , string path) where T : new()
     {
         if (jsonObject == null)
             jsonObject = new T();  // 기본 생성자로 객체 초기화
@@ -72,5 +75,9 @@ public class JsonManager : MonoBehaviour
         //예시 실행코드
         //JsonManager.LoadData(파일경로 , 데이터클래스);
 
+    }
+    public void SaveGameSetting()
+    {
+        SaveData(gameSettingData, gameDataPath);
     }
 }

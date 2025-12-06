@@ -22,11 +22,11 @@ public class CustomSPManager : SerialPortManager
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             ReceivedData("S1");
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             ReceivedData("E1");
         }

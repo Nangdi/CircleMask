@@ -72,7 +72,7 @@ public class SerialPortManager : MonoBehaviour
                 string input = await Task.Run(() => ReadSerialData(), token);
                 //string data = GetData(input);
 
-                if (!string.IsNullOrEmpty(input) && input.Length >= 3)
+                if (!string.IsNullOrEmpty(input) /*&& input.Length >= 3*/)
                 {
                     Debug.Log("받은데이터 : " + input);
                     ReceivedData(input);

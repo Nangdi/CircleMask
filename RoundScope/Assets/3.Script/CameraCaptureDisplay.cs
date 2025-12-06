@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,7 @@ public class CameraCaptureDisplay : MonoBehaviour
     public RawImage display;         // UI에 띄울 RawImage
     public AspectRatioFitter fitter; // 비율 유지용 (선택사항)
     private WebCamTexture webcamTexture;
+    public TMP_InputField fpsInput;
 
     void Start()
     {
@@ -16,13 +18,15 @@ public class CameraCaptureDisplay : MonoBehaviour
             Debug.LogError("캡처보드 또는 웹캠이 감지되지 않았습니다.");
             return;
         }
-
         // 첫 번째 장치 사용 (필요 시 인덱스로 조정)
+        Debug.Log(JsonManager.instance.gameSettingData.FPS);
+        initFPS();
         string camName = devices[0].name;
         Debug.Log("사용 중인 장치: " + camName);
 
         // WebCamTexture 생성
-        webcamTexture = new WebCamTexture(camName, 1600, 1200, 60);
+        webcamTexture = new WebCamTexture(camName, 1600, 1200, JsonManager.instance.gameSettingData.FPS);
+        
         display.texture = webcamTexture;
         webcamTexture.Play();
     }
@@ -49,5 +53,15 @@ public class CameraCaptureDisplay : MonoBehaviour
     {
         if (webcamTexture != null && webcamTexture.isPlaying)
             webcamTexture.Stop();
+    }
+    public void EditFPS(string value)
+    {
+        int fps = int.Parse(value);
+        JsonManager.instance.gameSettingData.FPS = fps;
+        webcamTexture.requestedFPS = fps;
+    }
+    public void initFPS()
+    {
+        fpsInput.text = JsonManager.instance.gameSettingData.FPS.ToString();
     }
 }

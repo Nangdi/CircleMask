@@ -37,9 +37,10 @@ public class wepcamController : MonoBehaviour
         // -----------------------
         // ✅ WebCamTexture 생성
         // -----------------------
-        webcamTexture = new WebCamTexture(currentDeviceName, 1920, 1080, 30);
+        webcamTexture = new WebCamTexture(currentDeviceName, 1920, 1080, 60);
         display.texture = webcamTexture;
         webcamTexture.Play();
     }
+
 
 }

@@ -32,8 +32,8 @@ Material:
     - _AspectX: 2.2034166
     - _AspectY: 1.2577639
     - _Feather: 0.09192554
-    - _OffsetX: -0.07577789
-    - _OffsetY: 0
+    - _OffsetX: -0.050490953
+    - _OffsetY: -0.044246044
     m_Colors:
     - _MaskColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
