@@ -14,6 +14,9 @@ public class GameSettingData
     public int FPS =30;
     public float cam1horizontlal = 0;
     public float cam2horizontlal = 0;
+    public float cam2vertical  = -547;
+    public float camDistance = 28;
+    public string ipString = "ws://192.168.0.199:9000";
 }
 public class PortJson
 {

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebRTC Camera Viewer</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 16px; background: #10131a; color: #e6ebf2; }
+    .wrap { max-width: 960px; margin: 0 auto; }
+    video { width: 100%; max-height: 70vh; background: #000; border-radius: 8px; }
+    button { padding: 10px 16px; border: 0; border-radius: 6px; background: #3b82f6; color: #fff; cursor: pointer; margin-right: 8px; }
+    button:disabled { background: #6b7280; cursor: not-allowed; }
+    .row { margin: 12px 0; }
+    input { width: 140px; padding: 8px; border-radius: 6px; border: 1px solid #334155; background: #0b1220; color: #e6ebf2; }
+  </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h2>WebRTC Camera Viewer</h2>
+      <div class="row">
+        <label>Server: </label>
+        <input type="text" id="server" value="http://127.0.0.1:9000" />
+        <button id="connect">Connect</button>
+        <button id="disconnect" disabled>Disconnect</button>
+      </div>
+      <video id="video" autoplay playsinline></video>
+      <div class="row" id="status"></div>
+    </div>
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const log = (m) => { $('status').textContent = m; };
+
+      let pc = null;
+
+      function createPeer() {
+        const cfg = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+        const pc = new RTCPeerConnection(cfg);
+        pc.addTransceiver('video', { direction: 'recvonly' });
+        pc.ontrack = (e) => {
+          const [stream] = e.streams;
+          $('video').srcObject = stream;
+        };
+        pc.onconnectionstatechange = () => log('PC State: ' + pc.connectionState);
+        pc.oniceconnectionstatechange = () => log('ICE State: ' + pc.iceConnectionState);
+        return pc;
+      }
+
+      async function connect() {
+        try {
+          $('connect').disabled = true;
+          $('disconnect').disabled = false;
+          const server = $('server').value.replace(/\/$/, '');
+
+          pc = createPeer();
+          const offer = await pc.createOffer();
+          await pc.setLocalDescription(offer);
+
+          const res = await fetch(server + '/webrtc/offer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sdp: offer.sdp, type: offer.type })
+          });
+          const answer = await res.json();
+          if (answer && answer.sdp) {
+            await pc.setRemoteDescription(answer);
+            log('Connected');
+          } else {
+            throw new Error('Invalid answer: ' + JSON.stringify(answer));
+          }
+        } catch (e) {
+          console.error(e);
+          log('Error: ' + e.message);
+          $('connect').disabled = false;
+          $('disconnect').disabled = true;
+        }
+      }
+
+      async function disconnect() {
+        try {
+          if (pc) {
+            pc.getSenders().forEach(s => { try { s.track && s.track.stop(); } catch(_){} });
+            await pc.close();
+            pc = null;
+          }
+        } finally {
+          $('connect').disabled = false;
+          $('disconnect').disabled = true;
+          log('Disconnected');
+        }
+      }
+
+      $('connect').addEventListener('click', connect);
+      $('disconnect').addEventListener('click', disconnect);
+    </script>
+  </body>
+  </html>
+
+
