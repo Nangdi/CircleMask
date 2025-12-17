@@ -28,7 +28,7 @@ namespace Vuplex.Demos
                 SetServerIp("http://192.168.0.199:9000");
 
                 // User Gesture + Connect 실행
-                StartCoroutine(AutoConnectWithUserGesture());
+                //StartConnectWeb();
             };
         }
 
@@ -76,7 +76,6 @@ namespace Vuplex.Demos
         // ================================================
         private IEnumerator AutoConnectWithUserGesture()
         {
-
             // HTML이 로드되도록 약간 대기
             yield return new WaitForSeconds(1.0f);
 
@@ -98,5 +97,10 @@ namespace Vuplex.Demos
             //yield return new WaitForSeconds(2);
             //ClickConnect();
         }
+        public void StartConnectWeb()
+        {
+            StartCoroutine(AutoConnectWithUserGesture());
+        }
     }
+    
 }

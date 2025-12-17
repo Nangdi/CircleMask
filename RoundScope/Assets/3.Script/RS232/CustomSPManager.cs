@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
+using Vuplex.Demos;
 public enum State
 {
     Play,
@@ -10,7 +11,9 @@ public enum State
 public class CustomSPManager : SerialPortManager
 {
     [SerializeField] private VideoController videoController;
+    [SerializeField] private SimpleWebViewDemo webView;
     public State state = State.Stop;
+    bool webstart;
     protected override void Awake()
     {
         base.Awake();
@@ -30,16 +33,34 @@ public class CustomSPManager : SerialPortManager
         {
             ReceivedData("E1");
         }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            ReceivedData("R1");
+        }
     }
     protected override void ReceivedData(string data)
     {
         switch (data)
         {
             case "S1":
+                if (!webstart)
+                {
+                    webstart = true;
+                    StartCoroutine(delay(8));
+
+
+                }
+                else
+                {
                 state = State.Play;
+
+                }
                 break;
             case "E1":
                 state = State.Stop;
+                break;
+            case "R1":
+               
                 break;
         }
 
@@ -56,5 +77,13 @@ public class CustomSPManager : SerialPortManager
                 break;
         }
     }
-  
+    private IEnumerator delay(float time)
+    {
+        webView.StartConnectWeb();
+        Debug.Log("µÙ∑π¿Ã¿¸");
+        yield return new WaitForSeconds(time);
+        Debug.Log("µÙ∑π¿Ã»ƒ");
+        state = State.Play;
+        videoController.OnSketchStart();
+    }
 }

@@ -843,7 +843,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   videoController: {fileID: 1493697229}
-  state: 0
+  webView: {fileID: 370145041}
+  state: 1
 --- !u!4 &308478651
 Transform:
   m_ObjectHideFlags: 0
